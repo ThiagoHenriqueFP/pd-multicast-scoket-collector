@@ -1,4 +1,4 @@
-package application.common.utils.impl;
+package application.common.utils.dto;
 
 import application.common.utils.interfaces.ConvertToByteArray;
 

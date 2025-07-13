@@ -1,17 +1,19 @@
-package application.common.utils.impl;
+package application.common.utils.impl.receiver;
 
 import application.common.enums.Group;
+import application.common.utils.dto.MessageDTO;
 import application.common.utils.interfaces.ActionReceiver;
+import application.common.utils.interfaces.Receiver;
 
 import java.io.IOException;
 import java.net.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Receiver {
+public class MultiCastReceiver implements Receiver {
     private final MulticastSocket socket;
 
-    public Receiver(int port, Group ip, ActionReceiver action) throws SocketException {
+    public MultiCastReceiver(int port, Group ip, ActionReceiver action) throws SocketException {
         try {
             this.socket = new MulticastSocket(port);
             InetSocketAddress remoteAddress = new InetSocketAddress(ip.getIp(), port);
@@ -23,7 +25,7 @@ public class Receiver {
         }
     }
 
-    public Receiver(int port, String ip, ActionReceiver action) throws SocketException {
+    public MultiCastReceiver(int port, String ip, ActionReceiver action) throws SocketException {
         try {
             this.socket = new MulticastSocket(port);
             InetSocketAddress remoteAddress = new InetSocketAddress(ip, port);
@@ -34,8 +36,8 @@ public class Receiver {
             throw new RuntimeException(e);
         }
     }
-
-    private void start(ActionReceiver action) {
+    @Override
+    public void start(ActionReceiver action) {
         System.out.println("INFO: Starting receiver");
         Runnable run = () -> {
             byte[] buffer = new byte[8192];

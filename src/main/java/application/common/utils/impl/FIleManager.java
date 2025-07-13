@@ -1,5 +1,7 @@
 package application.common.utils.impl;
 
+import application.common.utils.dto.QueryMessage;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;

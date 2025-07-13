@@ -1,6 +1,6 @@
 package application.common.utils.interfaces;
 
-import application.common.utils.impl.MessageDTO;
+import application.common.utils.dto.MessageDTO;
 
 import java.io.IOException;
 
