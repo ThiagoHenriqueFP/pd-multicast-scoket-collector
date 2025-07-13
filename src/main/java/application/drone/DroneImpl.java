@@ -1,7 +1,7 @@
 package application.drone;
 
-import application.common.utils.impl.Emitter;
-import application.common.utils.impl.MessageDTO;
+import application.common.utils.impl.emitter.MultiCastEmitter;
+import application.common.utils.dto.MessageDTO;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -10,27 +10,24 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class DroneImpl implements Drone {
-    private char separator;
+    private final char separator;
     private final LocalDateTime stop;
     private final Position position;
-    private final Emitter emitter;
+    private final MultiCastEmitter multiCastEmitter;
     private final ScheduledExecutorService executor;
 
     public DroneImpl(Position position, String ip, int port, char separator) {
         this.position = position;
         this.separator = separator;
         this.stop = LocalDateTime.now().plusSeconds(15);
-        this.emitter = new Emitter(port, ip);
+        this.multiCastEmitter = new MultiCastEmitter(port, ip);
         this.executor = Executors.newSingleThreadScheduledExecutor();
     }
 
+    @Override
     public void sendMessage(String message) {
         System.out.println(LocalDateTime.now() + ": " + message);
-        this.emitter.send(new MessageDTO(message));
-    }
-
-    private void setSparator(char separator) {
-        this.separator = separator;
+        this.multiCastEmitter.send(new MessageDTO(message));
     }
 
     private String collectData() {
@@ -71,7 +68,7 @@ public class DroneImpl implements Drone {
                 int random = (int) (Math.random() * 10 % 5);
                 this.executor.schedule(() -> sendMessageProcessor().run(), random, TimeUnit.SECONDS);
             } else {
-                emitter.close();
+                multiCastEmitter.close();
                 System.exit(0);
             }
         };

@@ -3,7 +3,11 @@ package application.gateway;
 import application.common.enums.BalanceLoaderTypes;
 import application.common.enums.Group;
 import application.common.exception.CouldNotSendException;
+import application.common.utils.dto.MessageDTO;
+import application.common.utils.dto.QueryMessage;
 import application.common.utils.impl.*;
+import application.common.utils.impl.emitter.MultiCastEmitter;
+import application.common.utils.impl.receiver.MultiCastReceiver;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -20,7 +24,7 @@ public class Gateway {
         try {
             this.serversIp = new ArrayList<>();
             FIleManager.createFile();
-            new Receiver(port, Group.GATEWAY, this::distribute);
+            new MultiCastReceiver(port, Group.GATEWAY, this::distribute);
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }
@@ -38,7 +42,7 @@ public class Gateway {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                new Emitter(5504, msg.ip())
+                new MultiCastEmitter(5504, msg.ip())
                         .send(new MessageDTO<>(list));
             } else if (!msg.ack()) {
                 switch (this.type) {
@@ -69,7 +73,7 @@ public class Gateway {
     private void rr(MessageDTO msg) throws CouldNotSendException {
         if (!this.serversIp.isEmpty()) {
             System.out.println("INFO: Sending to: " + serversIp.get(this.roundRobinIndex));
-            new Emitter(5504, serversIp.get(this.roundRobinIndex)).send(msg);
+            new MultiCastEmitter(5504, serversIp.get(this.roundRobinIndex)).send(msg);
             this.roundRobinIndex = (roundRobinIndex + 1) % serversIp.size();
         } else {
             System.out.println("WARN: Discarding package, due no servers connected");

@@ -1,7 +1,10 @@
 package application.client;
 
 import application.common.enums.Group;
-import application.common.utils.impl.*;
+import application.common.utils.dto.MessageDTO;
+import application.common.utils.dto.QueryMessage;
+import application.common.utils.impl.emitter.MultiCastEmitter;
+import application.common.utils.impl.receiver.MultiCastReceiver;
 
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -12,14 +15,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.UnaryOperator;
 
 public class Client {
-    private final Emitter emitter = new Emitter(5504, Group.GATEWAY.getIp());
+    private final MultiCastEmitter multiCastEmitter = new MultiCastEmitter(5504, Group.GATEWAY.getIp());
     private final List<QueryMessage> messages = new ArrayList<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public Client() {
         new Thread(() -> {
             try {
-                new Receiver(5504, "224.0.0.14", this::store);
+                new MultiCastReceiver(5504, "224.0.0.14", this::store);
             } catch (SocketException e) {
                 throw new RuntimeException(e);
             }
@@ -33,7 +36,7 @@ public class Client {
     }
 
     private void sync() {
-        this.emitter.send(new MessageDTO<>("224.0.0.14", true));
+        this.multiCastEmitter.send(new MessageDTO<>("224.0.0.14", true));
     }
 
     public List<QueryMessage> readFile(UnaryOperator<List<QueryMessage>> op) {
