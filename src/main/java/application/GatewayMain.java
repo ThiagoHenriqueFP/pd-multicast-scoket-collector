@@ -1,9 +1,10 @@
 package application;
 
-import application.gateway.Gateway;
+import application.common.enums.Topic;
+import application.gateway.GatewayIndirect;
 
 public class GatewayMain {
     public static void main(String[] args) {
-        new Gateway(5504);
+        new GatewayIndirect(Topic.DRONE);
     }
 }

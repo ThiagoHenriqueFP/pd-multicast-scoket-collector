@@ -34,6 +34,7 @@ public class MultiCastEmitter implements Emitter {
         return this;
     }
 
+    @Override
     public void close() {
         socket.close();
     }

@@ -4,7 +4,6 @@ import application.common.enums.Topic;
 import application.common.utils.interfaces.ConvertToByteArray;
 
 import java.io.*;
-import java.net.DatagramPacket;
 
 public record MessageDTO<T>(
         T message,
@@ -26,12 +25,12 @@ public record MessageDTO<T>(
         this(null, ip, false, retrieve, "");
     }
 
-    public MessageDTO(String ip, Topic topic) {
-        this(null, ip, false, false, topic.getTopic());
+    public MessageDTO(T message, Topic topic) {
+        this(message, null, false, false, topic.getTopic());
     }
 
-    public static MessageDTO fromDatagram(DatagramPacket packet) {
-        ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
+    public static MessageDTO fromBytes(byte[] bytes) {
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         try {
             ObjectInputStream ois = new ObjectInputStream(bis);
             Object msg = ois.readObject();

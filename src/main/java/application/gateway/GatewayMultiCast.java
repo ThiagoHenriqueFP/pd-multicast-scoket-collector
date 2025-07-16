@@ -15,12 +15,12 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Gateway {
+public class GatewayMultiCast {
     private final List<String> serversIp;
     private BalanceLoaderTypes type = BalanceLoaderTypes.ROUND_ROBIN;
     private int roundRobinIndex = 0;
 
-    public Gateway(int port) {
+    public GatewayMultiCast(int port) {
         try {
             this.serversIp = new ArrayList<>();
             FIleManager.createFile();

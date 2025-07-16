@@ -46,7 +46,7 @@ public class MultiCastReceiver implements Receiver {
             while (true) {
                 try {
                     this.socket.receive(packet);
-                    MessageDTO dto = MessageDTO.fromDatagram(packet);
+                    MessageDTO dto = MessageDTO.fromBytes(packet.getData());
                     if (!(dto.message() instanceof List<?>)) {
                         System.out.println("INFO: " + LocalDateTime.now() + " - " + packet.getAddress() + ": " + dto.message());
                     }
@@ -58,5 +58,10 @@ public class MultiCastReceiver implements Receiver {
         };
 
         run.run();
+    }
+
+    @Override
+    public void close() {
+        this.socket.close();
     }
 }
