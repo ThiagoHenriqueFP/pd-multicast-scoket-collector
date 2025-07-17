@@ -33,7 +33,7 @@ public class GatewayMultiCast {
     private void distribute(MessageDTO msg) {
         try {
             if (msg.retrieve()) {
-                System.out.println("IFO: Syncing with " + msg.ip());
+                System.out.println("INFO: Syncing with " + msg.ip());
                 List<QueryMessage> list;
                 try {
                     list = FIleManager.read();

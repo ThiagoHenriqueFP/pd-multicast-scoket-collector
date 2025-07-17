@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class MqttReceiver implements Receiver {
-    private static final String brokerUrl = "tcp://127.0.0.1:1883";
+    private static final String brokerUrl = "tcp://0.tcp.sa.ngrok.io:13590";
     private MqttClient client;
     private String clientId;
 

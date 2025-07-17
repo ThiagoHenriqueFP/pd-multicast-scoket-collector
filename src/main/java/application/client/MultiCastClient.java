@@ -14,12 +14,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.UnaryOperator;
 
-public class Client {
+public class MultiCastClient {
     private final MultiCastEmitter multiCastEmitter = new MultiCastEmitter(5504, Group.GATEWAY.getIp());
     private final List<QueryMessage> messages = new ArrayList<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public Client() {
+    public MultiCastClient() {
         new Thread(() -> {
             try {
                 new MultiCastReceiver(5504, "224.0.0.14", this::store);
